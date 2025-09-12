@@ -1,0 +1,270 @@
+"use client";
+
+import { useState, useMemo } from "react";
+import { Search, MoreVertical, ChevronLeft, ChevronRight } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { Restaurant } from "@/app/(DashboardLayout)/dashboard/restaurants/page";
+
+interface RestaurantListProps {
+  restaurants: Restaurant[];
+  onAddNew: () => void;
+  onEdit: (restaurant: Restaurant) => void;
+  onDelete: (id: string) => void;
+  onViewDetails: (restaurant: Restaurant) => void;
+}
+
+export function RestaurantList({
+  restaurants,
+  onAddNew,
+  onEdit,
+  onDelete,
+  onViewDetails,
+}: RestaurantListProps) {
+  const [searchTerm, setSearchTerm] = useState("");
+  const [currentPage, setCurrentPage] = useState(1);
+  const [isModalOpen, setIsModalOpen] = useState(false); // modal state
+  const [selectedRestaurantId, setSelectedRestaurantId] = useState<
+    string | null
+  >(null);
+
+  const itemsPerPage = 10;
+
+  const filteredRestaurants = useMemo(() => {
+    return restaurants.filter(
+      (r) =>
+        r.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        r.address.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        r.instagram.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        r.whatsapp.toLowerCase().includes(searchTerm.toLowerCase())
+    );
+  }, [searchTerm, restaurants]);
+
+  const totalPages = Math.ceil(filteredRestaurants.length / itemsPerPage);
+  const startIndex = (currentPage - 1) * itemsPerPage;
+  const endIndex = startIndex + itemsPerPage;
+  const currentRestaurants = filteredRestaurants.slice(startIndex, endIndex);
+
+  const handlePageChange = (page: number) => setCurrentPage(page);
+  const handlePrevious = () =>
+    currentPage > 1 && setCurrentPage(currentPage - 1);
+  const handleNext = () =>
+    currentPage < totalPages && setCurrentPage(currentPage + 1);
+
+  const openDeleteModal = (userId: string) => {
+    setSelectedRestaurantId(userId);
+    setIsModalOpen(true);
+  };
+
+  const closeModal = () => {
+    setIsModalOpen(false);
+    setSelectedRestaurantId(null);
+  };
+
+  const confirmDelete = () => {
+    if (selectedRestaurantId) {
+      onDelete(selectedRestaurantId);
+      closeModal();
+    }
+  };
+
+  const getPageNumbers = () => {
+    const pages = [];
+    const maxVisiblePages = 5;
+    if (totalPages <= maxVisiblePages) {
+      for (let i = 1; i <= totalPages; i++) pages.push(i);
+    } else {
+      if (currentPage <= 3) for (let i = 1; i <= 5; i++) pages.push(i);
+      else if (currentPage >= totalPages - 2)
+        for (let i = totalPages - 4; i <= totalPages; i++) pages.push(i);
+      else
+        for (let i = currentPage - 2; i <= currentPage + 2; i++) pages.push(i);
+    }
+    return pages;
+  };
+
+  return (
+    <div className="p-6 min-h-screen">
+      <div className="max-w-full mx-auto">
+        {/* Header */}
+        <div className="mb-4">
+          <p className="text-sm text-gray-400 mb-1">Restaurants List</p>
+          <h1 className="text-xl font-semibold text-orange-500">
+            Restaurants List
+          </h1>
+        </div>
+
+        {/* Search + Add Button */}
+        <div className="mb-6 flex justify-between items-center">
+          <div className="relative w-72">
+            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
+            <Input
+              placeholder="Search listing..."
+              className="pl-10 rounded-md border-gray-300"
+              value={searchTerm}
+              onChange={(e) => {
+                setSearchTerm(e.target.value);
+                setCurrentPage(1);
+              }}
+            />
+          </div>
+
+          <Button
+            onClick={onAddNew}
+            className="bg-orange-500 hover:bg-orange-600 text-white flex items-center gap-2"
+          >
+            + Add Restaurant
+          </Button>
+        </div>
+
+        {/* Table */}
+        <div className="bg-white rounded-md shadow border border-gray-200 overflow-hidden">
+          <table className="w-full text-sm">
+            <thead className="bg-gray-900 text-white">
+              <tr>
+                <th className="px-6 py-3 text-left font-medium">
+                  Restauranter ID
+                </th>
+                <th className="px-6 py-3 text-left font-medium">
+                  Restauranter Name
+                </th>
+                <th className="px-6 py-3 text-left font-medium">Location</th>
+                <th className="px-6 py-3 text-left font-medium">
+                  What&apos;s APP
+                </th>
+                <th className="px-6 py-3 text-left font-medium">Instagram</th>
+                <th className="px-6 py-3 text-left font-medium">Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              {currentRestaurants.map((restaurant, index) => (
+                <tr
+                  key={restaurant.id}
+                  className={index % 2 === 0 ? "bg-white" : "bg-gray-50"}
+                >
+                  <td className="px-6 py-3 border-t">{restaurant.id}</td>
+                  <td className="px-6 py-3 border-t">{restaurant.name}</td>
+                  <td className="px-6 py-3 border-t">{restaurant.address}</td>
+                  <td className="px-6 py-3 border-t">{restaurant.whatsapp}</td>
+                  <td className="px-6 py-3 border-t">{restaurant.instagram}</td>
+                  <td className="px-6 py-3 border-t">
+                    <DropdownMenu>
+                      <DropdownMenuTrigger asChild>
+                        <Button
+                          variant="ghost"
+                          size="icon"
+                          className="h-8 w-8 text-gray-600 hover:text-gray-900"
+                        >
+                          <MoreVertical className="h-4 w-4" />
+                        </Button>
+                      </DropdownMenuTrigger>
+                      <DropdownMenuContent align="end" className="w-32">
+                        <DropdownMenuItem
+                          onClick={() => onEdit(restaurant)}
+                          className="cursor-pointer"
+                        >
+                          Edit
+                        </DropdownMenuItem>
+                        <DropdownMenuItem
+                          onClick={() => onViewDetails(restaurant)}
+                          className="cursor-pointer"
+                        >
+                          Details
+                        </DropdownMenuItem>
+                        <DropdownMenuItem
+                          onClick={() => openDeleteModal(restaurant.id)}
+                          className="cursor-pointer text-red-500 focus:text-red-600"
+                        >
+                          Remove
+                        </DropdownMenuItem>
+                      </DropdownMenuContent>
+                    </DropdownMenu>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+
+        {/* Pagination */}
+        <div className="flex items-center justify-between mt-6">
+          {/* Left: info */}
+          <div className="text-sm text-gray-500">
+            Showing {startIndex + 1} to{" "}
+            {Math.min(endIndex, filteredRestaurants.length)} of{" "}
+            {filteredRestaurants.length} restaurants
+          </div>
+
+          {/* Right: page numbers */}
+          <div className="flex items-center gap-2">
+            <Button
+              variant="ghost"
+              size="sm"
+              className="text-gray-500 disabled:opacity-50"
+              onClick={handlePrevious}
+              disabled={currentPage === 1}
+            >
+              <ChevronLeft className="h-4 w-4" />
+            </Button>
+
+            {getPageNumbers().map((pageNum) => (
+              <Button
+                key={pageNum}
+                size="sm"
+                variant={currentPage === pageNum ? "default" : "ghost"}
+                className={
+                  currentPage === pageNum
+                    ? "bg-orange-500 hover:bg-orange-600 text-white"
+                    : "text-gray-700 hover:bg-gray-100"
+                }
+                onClick={() => handlePageChange(pageNum)}
+              >
+                {pageNum}
+              </Button>
+            ))}
+
+            <Button
+              variant="ghost"
+              size="sm"
+              className="text-gray-500 disabled:opacity-50"
+              onClick={handleNext}
+              disabled={currentPage === totalPages}
+            >
+              <ChevronRight className="h-4 w-4" />
+            </Button>
+          </div>
+        </div>
+      </div>
+
+      {/* Delete Confirmation Modal */}
+      {isModalOpen && (
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 overflow-y-auto">
+          <div className="bg-white rounded-lg p-6 w-80 relative shadow-2xl">
+            <h2 className="text-lg text-center font-semibold mb-4">
+              Do you want to remove?
+            </h2>
+            <div className="flex justify-around gap-2">
+              <Button
+                variant="ghost"
+                onClick={closeModal}
+                className="text-[#FF6203]"
+              >
+                No
+              </Button>
+              <Button variant="destructive" onClick={confirmDelete}>
+                Delete
+              </Button>
+            </div>
+          </div>
+
+        </div>
+      )}
+    </div>
+  );
+}
