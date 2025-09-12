@@ -6,12 +6,15 @@ export const baseApi = createApi({
     baseUrl: "https://seoagenciaseo-backend.onrender.com/api/v1",
     prepareHeaders: (headers, { getState }) => {
       const token = (getState() as any).auth.token;
+      console.log(token)
       if (token) {
         headers.set("Authorization", `${token}`);
+        console.log(headers, 'headers')
       }
+      
       return headers;
     },
   }),
-  tagTypes: ["User", "Post", "Auth"], // add tags for cache invalidation
-  endpoints: () => ({}), // initial empty endpoints to be injected later
+  tagTypes: ["User", "Post", "Auth"], 
+  endpoints: () => ({}), 
 });

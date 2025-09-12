@@ -1,8 +1,11 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
-import React from "react";
-import { FieldValues, useForm } from "react-hook-form";
+import { useForm, FieldValues } from "react-hook-form";
+import { useRouter } from "next/navigation";
+import Link from "next/link";
+import Cookies from "js-cookie";
+import { toast } from "sonner";
+
 import {
   Form,
   FormControl,
@@ -14,20 +17,19 @@ import {
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
-import {
-  useGetProfileQuery,
-  useLoginMutation,
-} from "@/redux/features/auth/authApi";
-import { toast } from "sonner";
-import Cookies from "js-cookie";
-import { jwtDecode } from "jwt-decode";
-import { useRouter } from "next/navigation";
-import Link from "next/link";
 import { SplinePointer } from "lucide-react";
 
-const Login = () => {
-  const [login, { isLoading: isLoging }] = useLoginMutation();
+import { useLoginMutation } from "@/redux/features/auth/authApi";
+import { useAppDispatch } from "@/hooks/hooks";
+import { setAuthData } from "@/redux/features/auth/authSlice";
+
+const Login: React.FC = () => {
+  const dispatch = useAppDispatch();
+
+  const [login, { isLoading }] = useLoginMutation();
+
   const router = useRouter();
+
   const form = useForm<FieldValues>({
     defaultValues: {
       email: "",
@@ -35,51 +37,47 @@ const Login = () => {
     },
   });
 
-  // Grab token from cookies (if user already logged in before)
-  const token = Cookies.get("token");
-
-  // Only fetch profile if token exists
-  const { data: profile, isLoading } = useGetProfileQuery(undefined, {
-    skip: !token,
-  });
-
   const onSubmit = async (data: FieldValues) => {
     try {
       const res = await login(data).unwrap();
       const token = res?.data?.token;
 
-      if (token) {
-        Cookies.set("token", token, { expires: 7 });
-        const decodeToken = jwtDecode(token);
-        console.log("Decoded Token:", decodeToken);
+      if (!token) throw new Error("No token received from server");
 
-        toast.success("Login successful");
-        router.push("/dashboard");
-      }
+      Cookies.set("token", token, { expires: 7 });
+      toast.success("Login successful!");
+      dispatch(
+        setAuthData({
+          token: res?.data?.token,
+          user: res?.data,
+        })
+      );
+
+      router.push("/dashboard");
+
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (err: any) {
       const errorMessage =
         err?.data?.message ||
         err?.data?.errorSources?.[0]?.details ||
-        err?.error ||
+        err?.message ||
         "Something went wrong";
-
-      console.error(errorMessage);
       toast.error(errorMessage);
+      console.error(errorMessage);
     }
   };
 
   return (
-    <Card className="w-full max-w-sm shadow-none">
+    <Card className="w-full max-w-sm  mx-auto mt-16">
       <CardHeader>
-        <CardTitle className="text-center">Login to your account</CardTitle>
+        <CardTitle className="text-center text-lg font-semibold">
+          Login to your account
+        </CardTitle>
       </CardHeader>
 
       <CardContent>
-        {isLoading && <p>Loading profile...</p>}
-        {profile && <p>Welcome back, {profile.data.fullName}</p>}
-
         <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-3">
             {/* Email */}
             <FormField
               control={form.control}
@@ -96,8 +94,8 @@ const Login = () => {
                   <FormLabel>Email</FormLabel>
                   <FormControl>
                     <Input
-                      placeholder="Enter your email"
                       type="email"
+                      placeholder="Enter your email"
                       {...field}
                     />
                   </FormControl>
@@ -122,8 +120,8 @@ const Login = () => {
                   <FormLabel>Password</FormLabel>
                   <FormControl>
                     <Input
-                      placeholder="Enter your password"
                       type="password"
+                      placeholder="Enter your password"
                       {...field}
                     />
                   </FormControl>
@@ -134,16 +132,19 @@ const Login = () => {
 
             {/* Forgot Password */}
             <div className="flex justify-end">
-              <Link href="/forgot-password" className="text-sm hover:underline">
+              <Link
+                href="/forgot-password"
+                className="text-sm text-blue-600 hover:underline"
+              >
                 Forgot password?
               </Link>
             </div>
 
             <Button type="submit" className="w-full" disabled={isLoading}>
-              {isLoging ? (
-                <div className="flex items-center gap-2">
+              {isLoading ? (
+                <div className="flex items-center justify-center gap-2">
                   <SplinePointer className="animate-spin" />
-                  <span>Logging in...</span>
+                  Logging in...
                 </div>
               ) : (
                 "Login"
