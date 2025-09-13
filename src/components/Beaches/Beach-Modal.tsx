@@ -3,14 +3,15 @@
 import Image from "next/image";
 import { X, MapPin } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Fashion } from "./Fashion-List";
 
-interface FashionModalProps {
-  fashion: Fashion;
+import { Beach } from "./Beaches-List";
+
+interface BeachModalProps {
+  beach: Beach;
   onClose: () => void;
 }
 
-export function FashionModal({ fashion, onClose }: FashionModalProps) {
+export function BeachModal({ beach, onClose }: BeachModalProps) {
   return (
     <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
       <div className="bg-white rounded-lg max-w-md w-full max-h-[90vh] overflow-y-auto">
@@ -29,10 +30,10 @@ export function FashionModal({ fashion, onClose }: FashionModalProps) {
         {/* Fashion Image */}
         <div className="px-6 pb-4">
           <div className="w-full h-48 bg-gray-200 rounded-lg overflow-hidden relative">
-            {typeof fashion.image === "string" && fashion.image ? (
+            {typeof beach.image === "string" && beach.image ? (
               <Image
-                src={fashion.image}
-                alt={fashion.storeName}
+                src={beach.image}
+                alt={beach.beachName}
                 fill
                 className="object-cover"
               />
@@ -47,17 +48,17 @@ export function FashionModal({ fashion, onClose }: FashionModalProps) {
         {/* Fashion Details */}
         <div className="px-6 pb-6">
           <h2 className="text-xl font-semibold text-gray-900 mb-2">
-            {fashion.storeName}
+            {beach.beachName}
           </h2>
 
           {/* Rating */}
           <div className="flex items-center gap-2 mb-3">
-            <span className="text-gray-800 font-medium">{fashion.review}</span>
+            <span className="text-gray-800 font-medium">{beach.review}</span>
             <div className="flex text-orange-500">
-              {Array.from({ length: fashion.review }).map((_, i) => (
+              {Array.from({ length: beach.review }).map((_, i) => (
                 <span key={i}>★</span>
               ))}
-              {Array.from({ length: 5 - fashion.review }).map((_, i) => (
+              {Array.from({ length: 5 - beach.review }).map((_, i) => (
                 <span key={i} className="text-gray-300">
                   ★
                 </span>
@@ -68,7 +69,7 @@ export function FashionModal({ fashion, onClose }: FashionModalProps) {
           {/* Address */}
           <div className="flex items-start gap-2 mb-6">
             <MapPin className="h-4 w-4 text-gray-500 mt-0.5 flex-shrink-0" />
-            <span className="text-gray-600 text-sm">{fashion.address}</span>
+            <span className="text-gray-600 text-sm">{beach.address}</span>
           </div>
 
           {/* View Map Button */}

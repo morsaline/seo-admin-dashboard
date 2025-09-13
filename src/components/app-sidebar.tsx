@@ -9,6 +9,8 @@ import {
   MapPin,
   Wrench,
   Handbag,
+  TreePalm,
+  Wine,
   Star,
   Settings,
 } from "lucide-react";
@@ -71,6 +73,16 @@ const data = {
       title: "Fashion",
       url: "/dashboard/fashions",
       icon: Handbag,
+    },
+    {
+      title: "Beaches",
+      url: "/dashboard/beaches",
+      icon: TreePalm,
+    },
+    {
+      title: "Bars",
+      url: "/dashboard/bars",
+      icon: Wine,
     },
     {
       title: "Review",

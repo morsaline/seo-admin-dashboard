@@ -11,24 +11,24 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 
-export interface Fashion {
+export interface Beach {
   id: string;
-  storeName: string;
+  beachName: string;
   review: 1 | 2 | 3 | 4 | 5 | number;
   address: string;
   image?: File | string | null;
 }
 
 interface ServiceListProps {
-  Fashions: Fashion[];
+  beaches: Beach[];
   onAddNew: () => void;
-  onEdit: (fashion: Fashion) => void;
+  onEdit: (fashion: Beach) => void;
   onDelete: (id: string) => void;
-  onViewDetails: (fashion: Fashion) => void;
+  onViewDetails: (fashion: Beach) => void;
 }
 
-export function FashionList({
-  Fashions,
+export function BeachList({
+  beaches,
   onAddNew,
   onEdit,
   onDelete,
@@ -37,24 +37,22 @@ export function FashionList({
   const [searchTerm, setSearchTerm] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [selectedFashionId, setSelectedFashionId] = useState<string | null>(
-    null
-  );
+  const [selectedBeachId, setSelectedBeachId] = useState<string | null>(null);
 
   const itemsPerPage = 10;
 
-  const filteredFashions = useMemo(() => {
-    return Fashions?.filter(
+  const filteredBeaches = useMemo(() => {
+    return beaches?.filter(
       (service) =>
-        service.storeName.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        service.beachName.toLowerCase().includes(searchTerm.toLowerCase()) ||
         service.address.toLowerCase().includes(searchTerm.toLowerCase())
     );
-  }, [searchTerm, Fashions]);
+  }, [searchTerm, beaches]);
 
-  const totalPages = Math.ceil(filteredFashions.length / itemsPerPage);
+  const totalPages = Math.ceil(filteredBeaches.length / itemsPerPage);
   const startIndex = (currentPage - 1) * itemsPerPage;
   const endIndex = startIndex + itemsPerPage;
-  const currentFashions = filteredFashions.slice(startIndex, endIndex);
+  const currentBeaches = filteredBeaches.slice(startIndex, endIndex);
 
   const handlePageChange = (page: number) => setCurrentPage(page);
   const handlePrevious = () =>
@@ -62,19 +60,19 @@ export function FashionList({
   const handleNext = () =>
     currentPage < totalPages && setCurrentPage(currentPage + 1);
 
-  const openDeleteModal = (fashionId: string) => {
-    setSelectedFashionId(fashionId);
+  const openDeleteModal = (beachId: string) => {
+    setSelectedBeachId(beachId);
     setIsModalOpen(true);
   };
 
   const closeModal = () => {
     setIsModalOpen(false);
-    setSelectedFashionId(null);
+    setSelectedBeachId(null);
   };
 
   const confirmDelete = () => {
-    if (selectedFashionId) {
-      onDelete(selectedFashionId);
+    if (selectedBeachId) {
+      onDelete(selectedBeachId);
       closeModal();
     }
   };
@@ -99,9 +97,9 @@ export function FashionList({
       <div className="max-w-full mx-auto">
         {/* Header */}
         <div className="mb-4">
-          <p className="text-sm text-gray-400 mb-1">Fashions List</p>
+          <p className="text-sm text-gray-400 mb-1">Beaches List</p>
           <h1 className="text-xl md:text-2xl font-semibold text-orange-500">
-            Fashions List
+            Beaches List
           </h1>
         </div>
 
@@ -124,7 +122,7 @@ export function FashionList({
             onClick={onAddNew}
             className="bg-orange-500 hover:bg-orange-600 text-white flex items-center gap-2 w-full sm:w-auto justify-center"
           >
-            + Add Service
+            + Add Beach
           </Button>
         </div>
 
@@ -134,10 +132,10 @@ export function FashionList({
             <thead className="bg-gray-900 text-white">
               <tr>
                 <th className="px-4 sm:px-6 py-3 text-left font-medium">
-                  Store ID
+                  Beach ID
                 </th>
                 <th className="px-4 sm:px-6 py-3 text-left font-medium">
-                  Store Name
+                  Beach Name
                 </th>
                 <th className="px-4 sm:px-6 py-3 text-left font-medium">
                   Location
@@ -148,17 +146,17 @@ export function FashionList({
               </tr>
             </thead>
             <tbody>
-              {currentFashions.map((fashion, index) => (
+              {currentBeaches.map((beach, index) => (
                 <tr
-                  key={fashion.id}
+                  key={beach.id}
                   className={index % 2 === 0 ? "bg-white" : "bg-gray-50"}
                 >
-                  <td className="px-4 sm:px-6 py-3 border-t">{fashion.id}</td>
+                  <td className="px-4 sm:px-6 py-3 border-t">{beach.id}</td>
                   <td className="px-4 sm:px-6 py-3 border-t">
-                    {fashion.storeName}
+                    {beach.beachName}
                   </td>
                   <td className="px-4 sm:px-6 py-3 border-t">
-                    {fashion.address}
+                    {beach.address}
                   </td>
 
                   <td className="px-4 sm:px-6 py-3 border-t">
@@ -174,19 +172,19 @@ export function FashionList({
                       </DropdownMenuTrigger>
                       <DropdownMenuContent align="end" className="w-32">
                         <DropdownMenuItem
-                          onClick={() => onEdit(fashion)}
+                          onClick={() => onEdit(beach)}
                           className="cursor-pointer"
                         >
                           Edit
                         </DropdownMenuItem>
                         <DropdownMenuItem
-                          onClick={() => onViewDetails(fashion)}
+                          onClick={() => onViewDetails(beach)}
                           className="cursor-pointer"
                         >
                           Details
                         </DropdownMenuItem>
                         <DropdownMenuItem
-                          onClick={() => openDeleteModal(fashion.id)}
+                          onClick={() => openDeleteModal(beach.id)}
                           className="cursor-pointer text-red-500 focus:text-red-600"
                         >
                           Remove
@@ -205,8 +203,8 @@ export function FashionList({
           {/* Left: info */}
           <div className="text-sm text-gray-500 text-center sm:text-left">
             Showing {startIndex + 1} to{" "}
-            {Math.min(endIndex, filteredFashions.length)} of{" "}
-            {filteredFashions.length} services
+            {Math.min(endIndex, filteredBeaches.length)} of{" "}
+            {filteredBeaches.length} Beaches
           </div>
 
           {/* Right: page numbers */}
