@@ -8,6 +8,10 @@ import {
   Building,
   MapPin,
   Wrench,
+<<<<<<< HEAD
+=======
+  Handbag,
+>>>>>>> 4db8f4ce72a89ed6da8beb1c1ade0d0cee4dfe88
   Star,
   Settings,
 } from "lucide-react";
@@ -65,6 +69,11 @@ const data = {
       title: "Service List",
       url: "/dashboard/services",
       icon: Wrench,
+    },
+    {
+      title: "Fashion",
+      url: "/dashboard/fashions",
+      icon: Handbag,
     },
     {
       title: "Review",

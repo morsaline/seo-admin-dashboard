@@ -40,6 +40,7 @@ const Login: React.FC = () => {
   const onSubmit = async (data: FieldValues) => {
     try {
       const res = await login(data).unwrap();
+      console.log("Login Response:", res);
       const token = res?.data?.token;
 
       if (!token) throw new Error("No token received from server");
