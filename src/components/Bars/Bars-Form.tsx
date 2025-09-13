@@ -4,27 +4,29 @@ import type React from "react";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Fashion } from "./Fashion-List";
+// import { Fashion } from "./Fashion-List";
 import { UploadCloud } from "lucide-react";
+import { Bar } from "./Bars-List";
+// import { Beach } from "./Beaches-List";
 
-interface FashionFormProps {
-  fashion?: Fashion;
-  onSubmit: (service: Omit<Fashion, "id"> & { id?: string }) => void;
+interface BarsFormProps {
+  bar?: Bar;
+  onSubmit: (service: Omit<Bar, "id"> & { id?: string }) => void;
   onCancel: () => void;
   isEdit?: boolean;
 }
 
-export function FashionForm({
-  fashion,
+export function BarForm({
+  bar,
   onSubmit,
   onCancel,
   isEdit = false,
-}: FashionFormProps) {
+}: BarsFormProps) {
   const [formData, setFormData] = useState({
-    storeName: fashion?.storeName || "",
-    address: fashion?.address || "",
-    image: fashion?.image || "",
-    review: fashion?.review || 5,
+    barName: bar?.barName || "",
+    address: bar?.address || "",
+    image: bar?.image || "",
+    review: bar?.review || 5,
   });
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -45,10 +47,10 @@ export function FashionForm({
         {/* Header */}
         <div className="mb-6 text-center sm:text-left">
           <p className="text-sm text-gray-400 mb-1">
-            {isEdit ? "Edit Service" : "Add Service"}
+            {isEdit ? "Edit Bar" : "Add Bar"}
           </p>
           <h1 className="text-xl md:text-2xl font-semibold text-orange-500">
-            {isEdit ? "Edit Service" : "Add Service"}
+            {isEdit ? "Edit Bar" : "Add Bar"}
           </h1>
         </div>
 
@@ -58,12 +60,12 @@ export function FashionForm({
         >
           {/* Store Name */}
           <div>
-            <label className="block mb-1 font-medium">Store Name</label>
+            <label className="block mb-1 font-medium">Bar Name</label>
             <Input
               placeholder="Enter name"
-              value={formData.storeName}
+              value={formData.barName}
               onChange={(e) =>
-                setFormData((prev) => ({ ...prev, storeName: e.target.value }))
+                setFormData((prev) => ({ ...prev, beachName: e.target.value }))
               }
             />
           </div>

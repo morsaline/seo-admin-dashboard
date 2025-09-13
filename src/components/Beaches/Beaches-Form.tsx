@@ -4,27 +4,28 @@ import type React from "react";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Fashion } from "./Fashion-List";
+// import { Fashion } from "./Fashion-List";
 import { UploadCloud } from "lucide-react";
+import { Beach } from "./Beaches-List";
 
-interface FashionFormProps {
-  fashion?: Fashion;
-  onSubmit: (service: Omit<Fashion, "id"> & { id?: string }) => void;
+interface BeachFormProps {
+  beach?: Beach;
+  onSubmit: (service: Omit<Beach, "id"> & { id?: string }) => void;
   onCancel: () => void;
   isEdit?: boolean;
 }
 
-export function FashionForm({
-  fashion,
+export function BeachForm({
+  beach,
   onSubmit,
   onCancel,
   isEdit = false,
-}: FashionFormProps) {
+}: BeachFormProps) {
   const [formData, setFormData] = useState({
-    storeName: fashion?.storeName || "",
-    address: fashion?.address || "",
-    image: fashion?.image || "",
-    review: fashion?.review || 5,
+    beachName: beach?.beachName || "",
+    address: beach?.address || "",
+    image: beach?.image || "",
+    review: beach?.review || 5,
   });
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -45,10 +46,10 @@ export function FashionForm({
         {/* Header */}
         <div className="mb-6 text-center sm:text-left">
           <p className="text-sm text-gray-400 mb-1">
-            {isEdit ? "Edit Service" : "Add Service"}
+            {isEdit ? "Edit Beaches" : "Add Beaches"}
           </p>
           <h1 className="text-xl md:text-2xl font-semibold text-orange-500">
-            {isEdit ? "Edit Service" : "Add Service"}
+            {isEdit ? "Edit Beaches" : "Add Beaches"}
           </h1>
         </div>
 
@@ -58,12 +59,12 @@ export function FashionForm({
         >
           {/* Store Name */}
           <div>
-            <label className="block mb-1 font-medium">Store Name</label>
+            <label className="block mb-1 font-medium">Beach Name</label>
             <Input
               placeholder="Enter name"
-              value={formData.storeName}
+              value={formData.beachName}
               onChange={(e) =>
-                setFormData((prev) => ({ ...prev, storeName: e.target.value }))
+                setFormData((prev) => ({ ...prev, beachName: e.target.value }))
               }
             />
           </div>

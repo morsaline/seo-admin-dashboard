@@ -11,50 +11,48 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 
-export interface Fashion {
+export interface Bar {
   id: string;
-  storeName: string;
+  barName: string;
   review: 1 | 2 | 3 | 4 | 5 | number;
   address: string;
   image?: File | string | null;
 }
 
-interface ServiceListProps {
-  Fashions: Fashion[];
+interface BarsListProps {
+  bars: Bar[];
   onAddNew: () => void;
-  onEdit: (fashion: Fashion) => void;
+  onEdit: (fashion: Bar) => void;
   onDelete: (id: string) => void;
-  onViewDetails: (fashion: Fashion) => void;
+  onViewDetails: (fashion: Bar) => void;
 }
 
-export function FashionList({
-  Fashions,
+export function BarList({
+  bars,
   onAddNew,
   onEdit,
   onDelete,
   onViewDetails,
-}: ServiceListProps) {
+}: BarsListProps) {
   const [searchTerm, setSearchTerm] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [selectedFashionId, setSelectedFashionId] = useState<string | null>(
-    null
-  );
+  const [selectedBarId, setSelectedBarId] = useState<string | null>(null);
 
   const itemsPerPage = 10;
 
-  const filteredFashions = useMemo(() => {
-    return Fashions?.filter(
+  const filteredBars = useMemo(() => {
+    return bars?.filter(
       (service) =>
-        service.storeName.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        service.barName.toLowerCase().includes(searchTerm.toLowerCase()) ||
         service.address.toLowerCase().includes(searchTerm.toLowerCase())
     );
-  }, [searchTerm, Fashions]);
+  }, [searchTerm, bars]);
 
-  const totalPages = Math.ceil(filteredFashions.length / itemsPerPage);
+  const totalPages = Math.ceil(filteredBars.length / itemsPerPage);
   const startIndex = (currentPage - 1) * itemsPerPage;
   const endIndex = startIndex + itemsPerPage;
-  const currentFashions = filteredFashions.slice(startIndex, endIndex);
+  const currentBars = filteredBars.slice(startIndex, endIndex);
 
   const handlePageChange = (page: number) => setCurrentPage(page);
   const handlePrevious = () =>
@@ -62,19 +60,19 @@ export function FashionList({
   const handleNext = () =>
     currentPage < totalPages && setCurrentPage(currentPage + 1);
 
-  const openDeleteModal = (fashionId: string) => {
-    setSelectedFashionId(fashionId);
+  const openDeleteModal = (barId: string) => {
+    setSelectedBarId(barId);
     setIsModalOpen(true);
   };
 
   const closeModal = () => {
     setIsModalOpen(false);
-    setSelectedFashionId(null);
+    setSelectedBarId(null);
   };
 
   const confirmDelete = () => {
-    if (selectedFashionId) {
-      onDelete(selectedFashionId);
+    if (selectedBarId) {
+      onDelete(selectedBarId);
       closeModal();
     }
   };
@@ -99,9 +97,9 @@ export function FashionList({
       <div className="max-w-full mx-auto">
         {/* Header */}
         <div className="mb-4">
-          <p className="text-sm text-gray-400 mb-1">Fashions List</p>
+          <p className="text-sm text-gray-400 mb-1">Bars List</p>
           <h1 className="text-xl md:text-2xl font-semibold text-orange-500">
-            Fashions List
+            Bars List
           </h1>
         </div>
 
@@ -124,7 +122,7 @@ export function FashionList({
             onClick={onAddNew}
             className="bg-orange-500 hover:bg-orange-600 text-white flex items-center gap-2 w-full sm:w-auto justify-center"
           >
-            + Add Service
+            + Add Bar
           </Button>
         </div>
 
@@ -134,10 +132,10 @@ export function FashionList({
             <thead className="bg-gray-900 text-white">
               <tr>
                 <th className="px-4 sm:px-6 py-3 text-left font-medium">
-                  Store ID
+                  Bar ID
                 </th>
                 <th className="px-4 sm:px-6 py-3 text-left font-medium">
-                  Store Name
+                  Bar Name
                 </th>
                 <th className="px-4 sm:px-6 py-3 text-left font-medium">
                   Location
@@ -148,17 +146,17 @@ export function FashionList({
               </tr>
             </thead>
             <tbody>
-              {currentFashions.map((fashion, index) => (
+              {currentBars.map((bar, index) => (
                 <tr
-                  key={fashion.id}
+                  key={bar.id}
                   className={index % 2 === 0 ? "bg-white" : "bg-gray-50"}
                 >
-                  <td className="px-4 sm:px-6 py-3 border-t">{fashion.id}</td>
+                  <td className="px-4 sm:px-6 py-3 border-t">{bar.id}</td>
                   <td className="px-4 sm:px-6 py-3 border-t">
-                    {fashion.storeName}
+                    {bar.barName}
                   </td>
                   <td className="px-4 sm:px-6 py-3 border-t">
-                    {fashion.address}
+                    {bar.address}
                   </td>
 
                   <td className="px-4 sm:px-6 py-3 border-t">
@@ -174,19 +172,19 @@ export function FashionList({
                       </DropdownMenuTrigger>
                       <DropdownMenuContent align="end" className="w-32">
                         <DropdownMenuItem
-                          onClick={() => onEdit(fashion)}
+                          onClick={() => onEdit(bar)}
                           className="cursor-pointer"
                         >
                           Edit
                         </DropdownMenuItem>
                         <DropdownMenuItem
-                          onClick={() => onViewDetails(fashion)}
+                          onClick={() => onViewDetails(bar)}
                           className="cursor-pointer"
                         >
                           Details
                         </DropdownMenuItem>
                         <DropdownMenuItem
-                          onClick={() => openDeleteModal(fashion.id)}
+                          onClick={() => openDeleteModal(bar.id)}
                           className="cursor-pointer text-red-500 focus:text-red-600"
                         >
                           Remove
@@ -205,8 +203,8 @@ export function FashionList({
           {/* Left: info */}
           <div className="text-sm text-gray-500 text-center sm:text-left">
             Showing {startIndex + 1} to{" "}
-            {Math.min(endIndex, filteredFashions.length)} of{" "}
-            {filteredFashions.length} services
+            {Math.min(endIndex, filteredBars.length)} of{" "}
+            {filteredBars.length} services
           </div>
 
           {/* Right: page numbers */}
