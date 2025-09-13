@@ -51,7 +51,7 @@ export default function UserList() {
   };
   if (isLoading) return <Loader />;
   return (
-    <div className="p-6 min-h-screen bg-gray-50">
+    <div className="p-6 min-h-screen ">
       <div className="max-w-full mx-auto">
         {/* Header */}
         <div className="mb-6">

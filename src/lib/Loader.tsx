@@ -1,20 +1,49 @@
 "use client";
 
 import React from "react";
+import { Skeleton } from "@/components/ui/skeleton";
 
-const Loader = () => {
+const TableSkeleton = () => {
   return (
-    <div className="flex items-center justify-center  min-h-screen">
-      <div className="relative w-16 h-16">
-        {/* Outer circle */}
-        <div className="absolute inset-0 rounded-full border-4 border-orange-300 border-t-orange-500 animate-spin"></div>
-        {/* Middle circle */}
-        <div className="absolute inset-2 rounded-full border-4 border-orange-200 border-t-orange-400 animate-spin animation-delay-200"></div>
-        {/* Inner circle */}
-        <div className="absolute inset-4 rounded-full border-4 border-orange-100 border-t-orange-300 animate-spin animation-delay-400"></div>
-      </div>
-    </div>
+    <tbody className="flex flex-col items-center justify-center">
+      {Array.from({ length: 6 }).map((_, i) => (
+        <tr
+          key={i}
+          className={i % 2 === 0 ? "bg-white" : "bg-gray-50"} // match striped rows
+        >
+          {/* ID */}
+          <td className="px-6 py-4">
+            <Skeleton className="h-5 w-16" />
+          </td>
+
+          {/* Name */}
+          <td className="px-6 py-4">
+            <Skeleton className="h-5 w-40" />
+          </td>
+
+          {/* Email */}
+          <td className="px-6 py-4">
+            <Skeleton className="h-5 w-56" />
+          </td>
+
+          {/* Phone */}
+          <td className="px-6 py-4">
+            <Skeleton className="h-5 w-32" />
+          </td>
+
+          {/* Country */}
+          <td className="px-6 py-4">
+            <Skeleton className="h-5 w-28" />
+          </td>
+
+          {/* Actions */}
+          <td className="px-6 py-4">
+            <Skeleton className="h-8 w-8 rounded-full" />
+          </td>
+        </tr>
+      ))}
+    </tbody>
   );
 };
 
-export default Loader;
+export default TableSkeleton;

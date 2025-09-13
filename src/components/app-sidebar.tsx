@@ -8,10 +8,7 @@ import {
   Building,
   MapPin,
   Wrench,
-<<<<<<< HEAD
-=======
   Handbag,
->>>>>>> 4db8f4ce72a89ed6da8beb1c1ade0d0cee4dfe88
   Star,
   Settings,
 } from "lucide-react";

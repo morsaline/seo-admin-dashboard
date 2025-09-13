@@ -1,0 +1,43 @@
+import { baseApi } from "@/redux/api/baseApi";
+
+export const restaurantsApi = baseApi.injectEndpoints({
+  endpoints: (build) => ({
+    getAllRestaurants: build.query({
+      query: (params = {}) => ({
+        url: `/restourants`,
+        method: "GET",
+        params,
+      }),
+      providesTags: ["Restaurants"],
+    }),
+    getSingleRestaurant: build.query({
+      query: (id) => ({
+        url: `/restourants/${id}`,
+        method: "GET",
+      }),
+      providesTags: ["Restaurants"],
+    }),
+    updateSingleRestaurant: build.mutation({
+      query: ({ id, body }) => ({
+        url: `/restourants/update/${id}`,
+        method: "PATCH",
+        body,
+      }),
+      invalidatesTags: ["Restaurants"],
+    }),
+    deleteSingleRestaurant: build.mutation({
+      query: (id) => ({
+        url: `/restourants/${id}`,
+        method: "DELETE",
+      }),
+      invalidatesTags: ["Restaurants"],
+    }),
+  }),
+});
+
+export const {
+  useGetAllRestaurantsQuery,
+  useGetSingleRestaurantQuery,
+  useUpdateSingleRestaurantMutation,
+  useDeleteSingleRestaurantMutation,
+} = restaurantsApi;
