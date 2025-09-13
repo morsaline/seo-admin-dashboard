@@ -14,6 +14,7 @@ import { Restaurant } from "@/app/(DashboardLayout)/dashboard/restaurants/page";
 import Pagination from "@/lib/Pagination";
 import { useDeleteSingleRestaurantMutation } from "@/redux/features/restaurantsApi/restaurantsApi";
 import { toast } from "sonner";
+import Link from "next/link";
 
 interface RestaurantListProps {
   restaurants: Restaurant[];
@@ -129,12 +130,14 @@ export function RestaurantList({
             />
           </div>
 
-          <Button
-            onClick={onAddNew}
-            className="bg-orange-500 hover:bg-orange-600 text-white flex items-center gap-2"
-          >
-            + Add Restaurant
-          </Button>
+          <Link href={"/dashboard/add-restaurants"}>
+            <Button
+              onClick={onAddNew}
+              className="bg-orange-500 hover:bg-orange-600 text-white flex items-center gap-2"
+            >
+              + Add Restaurant
+            </Button>
+          </Link>
         </div>
 
         {/* Table */}

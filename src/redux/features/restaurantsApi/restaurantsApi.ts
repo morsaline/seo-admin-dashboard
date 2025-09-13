@@ -2,6 +2,14 @@ import { baseApi } from "@/redux/api/baseApi";
 
 export const restaurantsApi = baseApi.injectEndpoints({
   endpoints: (build) => ({
+    crateSingleRestaurant: build.mutation({
+      query: (body) => ({
+        url: `/restourants/create`,
+        method: "POST",
+        body,
+      }),
+      invalidatesTags: ["Restaurants"],
+    }),
     getAllRestaurants: build.query({
       query: (params = {}) => ({
         url: `/restourants`,
@@ -36,6 +44,7 @@ export const restaurantsApi = baseApi.injectEndpoints({
 });
 
 export const {
+  useCrateSingleRestaurantMutation,
   useGetAllRestaurantsQuery,
   useGetSingleRestaurantQuery,
   useUpdateSingleRestaurantMutation,

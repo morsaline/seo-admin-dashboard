@@ -115,14 +115,6 @@ export default function RestaurantManagement() {
           />
         )}
 
-        {/* Add Restaurant */}
-        {currentView === "add" && (
-          <RestaurantForm
-            onSubmit={handleSubmit}
-            onCancel={() => setCurrentView("list")}
-          />
-        )}
-
         {/* Edit Restaurant */}
         {currentView === "edit" && editingRestaurant && (
           <RestaurantForm
