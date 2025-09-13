@@ -6,10 +6,8 @@ export const baseApi = createApi({
     baseUrl: "https://seoagenciaseo-backend.onrender.com/api/v1",
     prepareHeaders: (headers, { getState }) => {
       const token = (getState() as any).auth.token;
-      console.log(token)
       if (token) {
         headers.set("Authorization", `${token}`);
-        console.log(headers, 'headers')
       }
       
       return headers;
