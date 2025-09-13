@@ -1,22 +1,34 @@
-"use client"
+"use client";
 
-import type React from "react"
+import type React from "react";
 
-import { useState, useRef } from "react"
-import { X, Plus, Upload } from "lucide-react"
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import type { Service } from "./Service-List"
+import { useState, useRef } from "react";
+import { X, Plus, Upload } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import type { Service } from "./Service-List";
+
 
 interface ServiceFormProps {
-  service?: Service
-  onSubmit: (service: Omit<Service, "id"> & { id?: string }) => void
-  onCancel: () => void
-  isEdit?: boolean
+  service?: Service;
+  onSubmit: (service: Omit<Service, "id"> & { id?: string }) => void;
+  onCancel: () => void;
+  isEdit?: boolean;
 }
 
-export function ServiceForm({ service, onSubmit, onCancel, isEdit = false }: ServiceFormProps) {
+export function ServiceForm({
+  service,
+  onSubmit,
+  onCancel,
+  isEdit = false,
+}: ServiceFormProps) {
   const [formData, setFormData] = useState({
     name: service?.name || "",
     category: service?.category || "",
@@ -24,52 +36,54 @@ export function ServiceForm({ service, onSubmit, onCancel, isEdit = false }: Ser
     phone: service?.phone || "",
     facilities: service?.facilities || [""],
     image: service?.image || "",
-  })
+  });
 
-  const fileInputRef = useRef<HTMLInputElement>(null)
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   const handleInputChange = (field: string, value: string) => {
-    setFormData((prev) => ({ ...prev, [field]: value }))
-  }
+    setFormData((prev) => ({ ...prev, [field]: value }));
+  };
 
   const handleFacilityChange = (index: number, value: string) => {
-    const newFacilities = [...formData.facilities]
-    newFacilities[index] = value
-    setFormData((prev) => ({ ...prev, facilities: newFacilities }))
-  }
+    const newFacilities = [...formData.facilities];
+    newFacilities[index] = value;
+    setFormData((prev) => ({ ...prev, facilities: newFacilities }));
+  };
 
   const addFacility = () => {
-    setFormData((prev) => ({ ...prev, facilities: [...prev.facilities, ""] }))
-  }
+    setFormData((prev) => ({ ...prev, facilities: [...prev.facilities, ""] }));
+  };
 
   const removeFacility = (index: number) => {
     if (formData.facilities.length > 1) {
-      const newFacilities = formData.facilities.filter((_, i) => i !== index)
-      setFormData((prev) => ({ ...prev, facilities: newFacilities }))
+      const newFacilities = formData.facilities.filter((_, i) => i !== index);
+      setFormData((prev) => ({ ...prev, facilities: newFacilities }));
     }
-  }
+  };
 
   const handleImageUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const file = event.target.files?.[0]
+    const file = event.target.files?.[0];
     if (file) {
-      const reader = new FileReader()
+      const reader = new FileReader();
       reader.onload = (e) => {
-        setFormData((prev) => ({ ...prev, image: e.target?.result as string }))
-      }
-      reader.readAsDataURL(file)
+        setFormData((prev) => ({ ...prev, image: e.target?.result as string }));
+      };
+      reader.readAsDataURL(file);
     }
-  }
+  };
 
   const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault()
-    const filteredFacilities = formData.facilities.filter((facility) => facility.trim() !== "")
+    e.preventDefault();
+    const filteredFacilities = formData.facilities.filter(
+      (facility) => facility.trim() !== ""
+    );
     const serviceData = {
       ...formData,
       facilities: filteredFacilities,
       ...(isEdit && service ? { id: service.id } : {}),
-    }
-    onSubmit(serviceData)
-  }
+    };
+    onSubmit(serviceData);
+  };
 
   const categories = [
     "Hospital",
@@ -82,15 +96,19 @@ export function ServiceForm({ service, onSubmit, onCancel, isEdit = false }: Ser
     "Shopping",
     "Education",
     "Other",
-  ]
+  ];
 
   return (
     <div className="p-6 min-h-screen">
       <div className="max-w-2xl mx-auto">
         {/* Header */}
         <div className="mb-6">
-          <p className="text-sm text-gray-400 mb-1">{isEdit ? "Edit Service" : "Add Service"}</p>
-          <h1 className="text-xl font-semibold text-orange-500">{isEdit ? "Edit Service" : "Add Service"}</h1>
+          <p className="text-sm text-gray-400 mb-1">
+            {isEdit ? "Edit Service" : "Add Service"}
+          </p>
+          <h1 className="text-xl font-semibold text-orange-500">
+            {isEdit ? "Edit Service" : "Add Service"}
+          </h1>
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-6">
@@ -112,7 +130,10 @@ export function ServiceForm({ service, onSubmit, onCancel, isEdit = false }: Ser
               <label className="block text-sm font-medium text-gray-700 mb-2">
                 Select Category<span className="text-red-500">*</span>
               </label>
-              <Select value={formData.category} onValueChange={(value) => handleInputChange("category", value)}>
+              <Select
+                value={formData.category}
+                onValueChange={(value) => handleInputChange("category", value)}
+              >
                 <SelectTrigger className="w-full">
                   <SelectValue placeholder="Select category" />
                 </SelectTrigger>
@@ -157,14 +178,18 @@ export function ServiceForm({ service, onSubmit, onCancel, isEdit = false }: Ser
 
           {/* Facilities */}
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">Facilities</label>
+            <label className="block text-sm font-medium text-gray-700 mb-2">
+              Facilities
+            </label>
             <div className="space-y-3">
               {formData.facilities.map((facility, index) => (
                 <div key={index} className="flex items-center gap-2">
                   <Input
                     placeholder="Add description"
                     value={facility}
-                    onChange={(e) => handleFacilityChange(index, e.target.value)}
+                    onChange={(e) =>
+                      handleFacilityChange(index, e.target.value)
+                    }
                     className="flex-1"
                   />
                   {formData.facilities.length > 1 && (
@@ -194,9 +219,17 @@ export function ServiceForm({ service, onSubmit, onCancel, isEdit = false }: Ser
 
           {/* Add Image */}
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">Add Image</label>
+            <label className="block text-sm font-medium text-gray-700 mb-2">
+              Add Image
+            </label>
             <div className="border-2 border-dashed border-gray-300 rounded-lg p-8 text-center">
-              <input type="file" ref={fileInputRef} onChange={handleImageUpload} accept="image/*" className="hidden" />
+              <input
+                type="file"
+                ref={fileInputRef}
+                onChange={handleImageUpload}
+                accept="image/*"
+                className="hidden"
+              />
               {formData.image ? (
                 <div className="space-y-4">
                   <img
@@ -218,7 +251,9 @@ export function ServiceForm({ service, onSubmit, onCancel, isEdit = false }: Ser
                   <Upload className="mx-auto h-12 w-12 text-gray-400" />
                   <div>
                     <p className="text-gray-600">Drop file or browse</p>
-                    <p className="text-sm text-gray-400">Supports: JPG, JPEG2000, PNG</p>
+                    <p className="text-sm text-gray-400">
+                      Supports: JPG, JPEG2000, PNG
+                    </p>
                   </div>
                   <Button
                     type="button"
@@ -235,15 +270,23 @@ export function ServiceForm({ service, onSubmit, onCancel, isEdit = false }: Ser
 
           {/* Action Buttons */}
           <div className="flex justify-end gap-4 pt-6">
-            <Button type="button" variant="outline" onClick={onCancel} className="px-8 bg-transparent">
+            <Button
+              type="button"
+              variant="outline"
+              onClick={onCancel}
+              className="px-8 bg-transparent"
+            >
               Cancel
             </Button>
-            <Button type="submit" className="bg-orange-500 hover:bg-orange-600 text-white px-8">
+            <Button
+              type="submit"
+              className="bg-orange-500 hover:bg-orange-600 text-white px-8"
+            >
               {isEdit ? "Done" : "Upload"}
             </Button>
           </div>
         </form>
       </div>
     </div>
-  )
+  );
 }

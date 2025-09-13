@@ -1,11 +1,26 @@
-"use client"
+"use client";
 
-import type * as React from "react"
-import { Users, LayoutDashboard, UtensilsCrossed, Building, MapPin, Wrench, Star, Settings } from "lucide-react"
+import type * as React from "react";
+import {
+  Users,
+  LayoutDashboard,
+  UtensilsCrossed,
+  Building,
+  MapPin,
+  Wrench,
+  Handbag,
+  Star,
+  Settings,
+} from "lucide-react";
 
-import { NavMain } from "@/components/nav-main"
-import { TeamSwitcher } from "@/components/team-switcher"
-import { Sidebar, SidebarContent, SidebarHeader, SidebarRail } from "@/components/ui/sidebar"
+import { NavMain } from "@/components/nav-main";
+import { TeamSwitcher } from "@/components/team-switcher";
+import {
+  Sidebar,
+  SidebarContent,
+  SidebarHeader,
+  SidebarRail,
+} from "@/components/ui/sidebar";
 
 const data = {
   user: {
@@ -53,6 +68,11 @@ const data = {
       icon: Wrench,
     },
     {
+      title: "Fashion",
+      url: "/dashboard/fashions",
+      icon: Handbag,
+    },
+    {
       title: "Review",
       url: "/dashboard/reviews",
       icon: Star,
@@ -63,7 +83,7 @@ const data = {
       icon: Settings,
     },
   ],
-}
+};
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   return (
@@ -76,5 +96,5 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
       </SidebarContent>
       <SidebarRail />
     </Sidebar>
-  )
+  );
 }
