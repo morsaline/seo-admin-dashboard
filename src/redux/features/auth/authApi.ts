@@ -1,4 +1,5 @@
 import { baseApi } from "@/redux/api/baseApi";
+import { setUser, setToken } from "./authSlice";
 
 export const authApi = baseApi.injectEndpoints({
   endpoints: (build) => ({
@@ -8,15 +9,67 @@ export const authApi = baseApi.injectEndpoints({
         method: "POST",
         body: credentials,
       }),
-      invalidatesTags: ["Auth"],
+      async onQueryStarted(arg, { queryFulfilled, dispatch }) {
+        try {
+          const { data } = await queryFulfilled;
+          const token = data?.data?.token;
+
+          if (token) {
+            dispatch(setToken(token));
+          }
+        } catch (err) {
+          console.error("Login failed", err);
+        }
+      },
     }),
 
     getProfile: build.query({
       query: () => "/users/get-me",
       providesTags: ["Auth"],
+      async onQueryStarted(arg, { queryFulfilled, dispatch }) {
+        try {
+          const { data } = await queryFulfilled;
+          if (data?.data) {
+            dispatch(setUser(data.data));
+          }
+        } catch (err) {
+          console.error("Fetching profile failed", err);
+        }
+      },
     }),
+
+    forgetPassword: build.mutation({
+      query: (body) => ({
+        url: `/auth/forgot-password`,
+        method: "POST",
+        body,
+      }),
+      invalidatesTags: ["Auth"],
+    }),
+
+    resetPassword: build.mutation({
+      query: (body) => ({
+        url: `/auth/reset-password`,
+        method: "POST",
+        body,
+      }),
+      invalidatesTags: ["Auth"],
+    }),
+
+    otpVerify: build.mutation({
+      query: (body) => ({
+        url: `/auth/verify-otp`,
+        method: 'POST',
+        body
+      })
+    })
   }),
-  overrideExisting: false,
 });
 
-export const { useLoginMutation, useGetProfileQuery } = authApi;
+export const {
+  useLoginMutation,
+  useGetProfileQuery,
+  useForgetPasswordMutation,
+  useResetPasswordMutation,
+  useOtpVerifyMutation
+} = authApi;

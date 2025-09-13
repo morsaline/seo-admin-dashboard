@@ -11,6 +11,10 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Restaurant } from "@/app/(DashboardLayout)/dashboard/restaurants/page";
+import Pagination from "@/lib/Pagination";
+import { useDeleteSingleRestaurantMutation } from "@/redux/features/restaurantsApi/restaurantsApi";
+import { toast } from "sonner";
+import Link from "next/link";
 
 interface RestaurantListProps {
   restaurants: Restaurant[];
@@ -18,6 +22,11 @@ interface RestaurantListProps {
   onEdit: (restaurant: Restaurant) => void;
   onDelete: (id: string) => void;
   onViewDetails: (restaurant: Restaurant) => void;
+  searchTerm: string;
+  setSearchTerm: (val: string) => void;
+  page: number;
+  setPage: (val: number) => void;
+  totalPages: number;
 }
 
 export function RestaurantList({
@@ -26,10 +35,15 @@ export function RestaurantList({
   onEdit,
   onDelete,
   onViewDetails,
+  searchTerm,
+  setSearchTerm,
+  page,
+  setPage,
+  totalPages,
 }: RestaurantListProps) {
-  const [searchTerm, setSearchTerm] = useState("");
+  const [deleteSingleRestaurant] = useDeleteSingleRestaurantMutation();
   const [currentPage, setCurrentPage] = useState(1);
-  const [isModalOpen, setIsModalOpen] = useState(false); // modal state
+  const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedRestaurantId, setSelectedRestaurantId] = useState<
     string | null
   >(null);
@@ -46,7 +60,6 @@ export function RestaurantList({
     );
   }, [searchTerm, restaurants]);
 
-  const totalPages = Math.ceil(filteredRestaurants.length / itemsPerPage);
   const startIndex = (currentPage - 1) * itemsPerPage;
   const endIndex = startIndex + itemsPerPage;
   const currentRestaurants = filteredRestaurants.slice(startIndex, endIndex);
@@ -67,9 +80,11 @@ export function RestaurantList({
     setSelectedRestaurantId(null);
   };
 
-  const confirmDelete = () => {
+  const confirmDelete = async () => {
     if (selectedRestaurantId) {
       onDelete(selectedRestaurantId);
+      const res = await deleteSingleRestaurant(selectedRestaurantId).unwrap();
+      toast.success(res?.message);
       closeModal();
     }
   };
@@ -115,12 +130,14 @@ export function RestaurantList({
             />
           </div>
 
-          <Button
-            onClick={onAddNew}
-            className="bg-orange-500 hover:bg-orange-600 text-white flex items-center gap-2"
-          >
-            + Add Restaurant
-          </Button>
+          <Link href={"/dashboard/add-restaurants"}>
+            <Button
+              onClick={onAddNew}
+              className="bg-orange-500 hover:bg-orange-600 text-white flex items-center gap-2"
+            >
+              + Add Restaurant
+            </Button>
+          </Link>
         </div>
 
         {/* Table */}
@@ -129,10 +146,10 @@ export function RestaurantList({
             <thead className="bg-gray-900 text-white">
               <tr>
                 <th className="px-6 py-3 text-left font-medium">
-                  Restauranter ID
+                  Restaurant ID
                 </th>
                 <th className="px-6 py-3 text-left font-medium">
-                  Restauranter Name
+                  Restaurant Name
                 </th>
                 <th className="px-6 py-3 text-left font-medium">Location</th>
                 <th className="px-6 py-3 text-left font-medium">
@@ -262,9 +279,13 @@ export function RestaurantList({
               </Button>
             </div>
           </div>
-
         </div>
       )}
+      <Pagination
+        currentPage={page}
+        totalPages={totalPages}
+        onPageChange={setPage}
+      />
     </div>
   );
 }

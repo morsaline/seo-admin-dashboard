@@ -3,8 +3,12 @@ import { baseApi } from "@/redux/api/baseApi";
 export const usersApi = baseApi.injectEndpoints({
   endpoints: (build) => ({
     fetchUsers: build.query({
-      query: () => "users",
-      providesTags: [{ type: "User", id: "LIST" }],
+      query: (params = {}) => ({
+        url: "/users/all-users",
+        method: "GET",
+        params,
+      }),
+      providesTags: ["User"],
     }),
 
     getUserById: build.query({
@@ -20,6 +24,12 @@ export const usersApi = baseApi.injectEndpoints({
       }),
       invalidatesTags: [{ type: "User", id: "SINGLE" }],
     }),
+    deleteUser: build.mutation({
+      query: (id) => ({
+        url: `/users/delete/${id}`,
+        method: "DELETE",
+      }),
+    }),
   }),
 });
 
@@ -27,4 +37,5 @@ export const {
   useFetchUsersQuery,
   useGetUserByIdQuery,
   useUpdateUserMutation,
+  useDeleteUserMutation,
 } = usersApi;

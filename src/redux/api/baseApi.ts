@@ -9,9 +9,10 @@ export const baseApi = createApi({
       if (token) {
         headers.set("Authorization", `${token}`);
       }
+      
       return headers;
     },
   }),
-  tagTypes: ["User", "Post", "Auth"], // add tags for cache invalidation
-  endpoints: () => ({}), // initial empty endpoints to be injected later
+  tagTypes: ["User", "Post", "Auth", "Restaurants"], 
+  endpoints: () => ({}), 
 });
