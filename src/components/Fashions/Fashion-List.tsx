@@ -13,10 +13,10 @@ import {
 
 export interface Fashion {
   id: string;
-  storeName: string; // Store name input
-  review: 1 | 2 | 3 | 4 | 5 | number; // Selected star rating
-  address: string; // Address input
-  image?: File | string | null; // Uploaded image file (optional)
+  storeName: string;
+  review: 1 | 2 | 3 | 4 | 5 | number;
+  address: string;
+  image?: File | string | null;
 }
 
 interface ServiceListProps {
@@ -95,19 +95,19 @@ export function FashionList({
   };
 
   return (
-    <div className="p-6 min-h-screen">
+    <div className="p-4 sm:p-6 min-h-screen">
       <div className="max-w-full mx-auto">
         {/* Header */}
         <div className="mb-4">
-          <p className="text-sm text-gray-400 mb-1">Sponsors List</p>
-          <h1 className="text-xl font-semibold text-orange-500">
-            Sponsors List
+          <p className="text-sm text-gray-400 mb-1">Fashions List</p>
+          <h1 className="text-xl md:text-2xl font-semibold text-orange-500">
+            Fashions List
           </h1>
         </div>
 
         {/* Search + Add Button */}
-        <div className="mb-6 flex justify-between items-center">
-          <div className="relative w-72">
+        <div className="mb-6 flex flex-col sm:flex-row gap-4 sm:gap-0 sm:justify-between sm:items-center">
+          <div className="relative w-full sm:w-72">
             <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
             <Input
               placeholder="Search listing..."
@@ -122,34 +122,46 @@ export function FashionList({
 
           <Button
             onClick={onAddNew}
-            className="bg-orange-500 hover:bg-orange-600 text-white flex items-center gap-2"
+            className="bg-orange-500 hover:bg-orange-600 text-white flex items-center gap-2 w-full sm:w-auto justify-center"
           >
             + Add Service
           </Button>
         </div>
 
-        {/* Table */}
-        <div className="bg-white rounded-md shadow border border-gray-200 overflow-hidden">
-          <table className="w-full text-sm">
+        {/* Table Wrapper for mobile scroll */}
+        <div className="bg-white rounded-md shadow border border-gray-200 overflow-x-auto">
+          <table className="w-full text-sm min-w-[600px]">
             <thead className="bg-gray-900 text-white">
               <tr>
-                <th className="px-6 py-3 text-left font-medium">Store ID</th>
-                <th className="px-6 py-3 text-left font-medium">Store Name</th>
-                <th className="px-6 py-3 text-left font-medium">Location</th>
-                <th className="px-6 py-3 text-left font-medium">Actions</th>
+                <th className="px-4 sm:px-6 py-3 text-left font-medium">
+                  Store ID
+                </th>
+                <th className="px-4 sm:px-6 py-3 text-left font-medium">
+                  Store Name
+                </th>
+                <th className="px-4 sm:px-6 py-3 text-left font-medium">
+                  Location
+                </th>
+                <th className="px-4 sm:px-6 py-3 text-left font-medium">
+                  Actions
+                </th>
               </tr>
             </thead>
             <tbody>
-              {currentFashions.map((service, index) => (
+              {currentFashions.map((fashion, index) => (
                 <tr
-                  key={service.id}
+                  key={fashion.id}
                   className={index % 2 === 0 ? "bg-white" : "bg-gray-50"}
                 >
-                  <td className="px-6 py-3 border-t">{service.id}</td>
-                  <td className="px-6 py-3 border-t">{service.storeName}</td>
-                  <td className="px-6 py-3 border-t">{service.address}</td>
+                  <td className="px-4 sm:px-6 py-3 border-t">{fashion.id}</td>
+                  <td className="px-4 sm:px-6 py-3 border-t">
+                    {fashion.storeName}
+                  </td>
+                  <td className="px-4 sm:px-6 py-3 border-t">
+                    {fashion.address}
+                  </td>
 
-                  <td className="px-6 py-3 border-t">
+                  <td className="px-4 sm:px-6 py-3 border-t">
                     <DropdownMenu>
                       <DropdownMenuTrigger asChild>
                         <Button
@@ -162,19 +174,19 @@ export function FashionList({
                       </DropdownMenuTrigger>
                       <DropdownMenuContent align="end" className="w-32">
                         <DropdownMenuItem
-                          onClick={() => onEdit(service)}
+                          onClick={() => onEdit(fashion)}
                           className="cursor-pointer"
                         >
                           Edit
                         </DropdownMenuItem>
                         <DropdownMenuItem
-                          onClick={() => onViewDetails(service)}
+                          onClick={() => onViewDetails(fashion)}
                           className="cursor-pointer"
                         >
                           Details
                         </DropdownMenuItem>
                         <DropdownMenuItem
-                          onClick={() => openDeleteModal(service.id)}
+                          onClick={() => openDeleteModal(fashion.id)}
                           className="cursor-pointer text-red-500 focus:text-red-600"
                         >
                           Remove
@@ -189,16 +201,16 @@ export function FashionList({
         </div>
 
         {/* Pagination */}
-        <div className="flex items-center justify-between mt-6">
+        <div className="flex flex-col sm:flex-row items-center justify-between mt-6 gap-4">
           {/* Left: info */}
-          <div className="text-sm text-gray-500">
+          <div className="text-sm text-gray-500 text-center sm:text-left">
             Showing {startIndex + 1} to{" "}
             {Math.min(endIndex, filteredFashions.length)} of{" "}
             {filteredFashions.length} services
           </div>
 
           {/* Right: page numbers */}
-          <div className="flex items-center gap-2">
+          <div className="flex flex-wrap items-center justify-center gap-2">
             <Button
               variant="ghost"
               size="sm"
@@ -240,8 +252,8 @@ export function FashionList({
 
       {/* Delete Confirmation Modal */}
       {isModalOpen && (
-        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 overflow-y-auto">
-          <div className="bg-white rounded-lg p-6 w-80 relative shadow-2xl">
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 overflow-y-auto p-4">
+          <div className="bg-white rounded-lg p-6 w-full max-w-sm relative shadow-2xl">
             <h2 className="text-lg text-center font-semibold mb-4">
               Do you want to remove?
             </h2>
