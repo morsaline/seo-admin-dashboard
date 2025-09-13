@@ -1,9 +1,7 @@
 "use client";
 
 import type React from "react";
-
 import { useState } from "react";
-
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Fashion } from "./Fashion-List";
@@ -42,19 +40,22 @@ export function FashionForm({
   };
 
   return (
-    <div className="p-6 min-h-screen">
-      <div className="">
+    <div className="p-4 sm:p-6 md:p-8 min-h-screen flex justify-center">
+      <div className="w-full max-w-2xl">
         {/* Header */}
-        <div className="mb-6">
+        <div className="mb-6 text-center sm:text-left">
           <p className="text-sm text-gray-400 mb-1">
             {isEdit ? "Edit Service" : "Add Service"}
           </p>
-          <h1 className="text-xl font-semibold text-orange-500">
+          <h1 className="text-xl md:text-2xl font-semibold text-orange-500">
             {isEdit ? "Edit Service" : "Add Service"}
           </h1>
         </div>
 
-        <form onSubmit={handleSubmit} className="w-full  rounded-xl  space-y-6">
+        <form
+          onSubmit={handleSubmit}
+          className="w-full bg-white rounded-xl space-y-6"
+        >
           {/* Store Name */}
           <div>
             <label className="block mb-1 font-medium">Store Name</label>
@@ -70,7 +71,7 @@ export function FashionForm({
           {/* Review */}
           <div>
             <label className="block mb-1 font-medium">Review</label>
-            <div className="flex gap-6">
+            <div className="grid grid-cols-2 sm:flex sm:gap-6 gap-4">
               {[1, 2, 3, 4, 5].map((star) => (
                 <label
                   key={star}
@@ -100,6 +101,7 @@ export function FashionForm({
               ))}
             </div>
           </div>
+
           {/* Address */}
           <div>
             <label className="block mb-1 font-medium">Address</label>
@@ -136,7 +138,7 @@ export function FashionForm({
                 onChange={handleFileChange}
               />
               {formData.image && (
-                <p className="mt-2 text-sm text-green-600">
+                <p className="mt-2 text-sm text-green-600 break-words">
                   Selected:{" "}
                   {typeof formData.image === "string"
                     ? formData.image
@@ -146,18 +148,19 @@ export function FashionForm({
             </div>
           </div>
 
-          <div className="flex justify-end gap-4 pt-6">
+          {/* Buttons */}
+          <div className="flex flex-col sm:flex-row justify-end gap-4 pt-6">
             <Button
               type="button"
               variant="outline"
               onClick={onCancel}
-              className="px-8 bg-transparent"
+              className="px-8 bg-transparent w-full sm:w-auto"
             >
               Cancel
             </Button>
             <Button
               type="submit"
-              className="bg-orange-500 hover:bg-orange-600 text-white px-8"
+              className="bg-orange-500 hover:bg-orange-600 text-white px-8 w-full sm:w-auto"
             >
               {isEdit ? "Done" : "Upload"}
             </Button>

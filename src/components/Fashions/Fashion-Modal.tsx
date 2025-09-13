@@ -5,12 +5,12 @@ import { X, MapPin } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Fashion } from "./Fashion-List";
 
-interface ServiceModalProps {
+interface FashionModalProps {
   fashion: Fashion;
   onClose: () => void;
 }
 
-export function FashionModal({ fashion, onClose }: ServiceModalProps) {
+export function FashionModal({ fashion, onClose }: FashionModalProps) {
   return (
     <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
       <div className="bg-white rounded-lg max-w-md w-full max-h-[90vh] overflow-y-auto">
