@@ -152,12 +152,8 @@ export function BarList({
                   className={index % 2 === 0 ? "bg-white" : "bg-gray-50"}
                 >
                   <td className="px-4 sm:px-6 py-3 border-t">{bar.id}</td>
-                  <td className="px-4 sm:px-6 py-3 border-t">
-                    {bar.barName}
-                  </td>
-                  <td className="px-4 sm:px-6 py-3 border-t">
-                    {bar.address}
-                  </td>
+                  <td className="px-4 sm:px-6 py-3 border-t">{bar.barName}</td>
+                  <td className="px-4 sm:px-6 py-3 border-t">{bar.address}</td>
 
                   <td className="px-4 sm:px-6 py-3 border-t">
                     <DropdownMenu>
@@ -203,8 +199,8 @@ export function BarList({
           {/* Left: info */}
           <div className="text-sm text-gray-500 text-center sm:text-left">
             Showing {startIndex + 1} to{" "}
-            {Math.min(endIndex, filteredBars.length)} of{" "}
-            {filteredBars.length} services
+            {Math.min(endIndex, filteredBars.length)} of {filteredBars.length}{" "}
+            Bars
           </div>
 
           {/* Right: page numbers */}

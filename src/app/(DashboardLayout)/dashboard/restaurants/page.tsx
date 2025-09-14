@@ -39,6 +39,7 @@ export default function RestaurantManagement() {
     limit,
     search: searchTerm,
   });
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   const apiRestaurants = data?.data?.data || [];
 
   // Convert API response -> Restaurant type
